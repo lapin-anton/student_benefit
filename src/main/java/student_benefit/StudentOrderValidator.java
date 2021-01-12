@@ -19,7 +19,7 @@ public class StudentOrderValidator {
     }
 
     private static void sendMail(StudentOrder order) {
-
+        System.out.println("Почта отправлена");
     }
 
     private static StudentOrder readStudentOrder() {
@@ -27,24 +27,25 @@ public class StudentOrderValidator {
     }
 
     public static AnswerCityRegister checkCityRegister(StudentOrder studentOrder) {
-        System.out.println("CityRegister is running");
-        AnswerCityRegister ans = new AnswerCityRegister();
-        ans.success = false;
-        return ans;
-    }
-
-    public static AnswerMarriage checkMarriage(StudentOrder studentOrder) {
-        System.out.println("Marriage is checking");
-        return new AnswerMarriage();
-    }
-
-    public static AnswerChildren checkChildren(StudentOrder studentOrder) {
-        System.out.println("Children is checking");
-        return new AnswerChildren();
+        CityRegisterValidator crv = new CityRegisterValidator();
+        crv.hostName = "hostName";
+        crv.login = "Login";
+        crv.password = "password";
+        return crv.checkCityRegister(studentOrder);
     }
 
     public static AnswerStudent checkStudent(StudentOrder studentOrder) {
-        System.out.println("Students is checking");
-        return new AnswerStudent();
+        StudentValidator sv = new StudentValidator();
+        return sv.checkStudent(studentOrder);
+    }
+
+    public static AnswerMarriage checkMarriage(StudentOrder studentOrder) {
+        MarriageValidator mv = new MarriageValidator();
+        return mv.checkMarriage(studentOrder);
+    }
+
+    public static AnswerChildren checkChildren(StudentOrder studentOrder) {
+        ChildrenValidator cv = new ChildrenValidator();
+        return cv.checkChildren(studentOrder);
     }
 }
