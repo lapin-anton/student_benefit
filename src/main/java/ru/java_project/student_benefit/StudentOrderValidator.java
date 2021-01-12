@@ -1,4 +1,11 @@
-package student_benefit;
+package ru.java_project.student_benefit;
+
+import ru.java_project.student_benefit.domain.*;
+import ru.java_project.student_benefit.mail.MailSender;
+import ru.java_project.student_benefit.validator.ChildrenValidator;
+import ru.java_project.student_benefit.validator.CityRegisterValidator;
+import ru.java_project.student_benefit.validator.MarriageValidator;
+import ru.java_project.student_benefit.validator.StudentValidator;
 
 public class StudentOrderValidator {
     public static void main(String[] args) {
@@ -19,7 +26,7 @@ public class StudentOrderValidator {
     }
 
     private static void sendMail(StudentOrder order) {
-        System.out.println("Почта отправлена");
+        new MailSender().sendMail(order);
     }
 
     private static StudentOrder readStudentOrder() {

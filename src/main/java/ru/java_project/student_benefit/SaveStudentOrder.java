@@ -1,4 +1,6 @@
-package student_benefit;
+package ru.java_project.student_benefit;
+
+import ru.java_project.student_benefit.domain.StudentOrder;
 
 public class SaveStudentOrder {
     public static void main(String[] args) {

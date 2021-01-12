@@ -1,10 +1,13 @@
-package student_benefit;
+package ru.java_project.student_benefit.validator;
+
+import ru.java_project.student_benefit.domain.AnswerCityRegister;
+import ru.java_project.student_benefit.domain.StudentOrder;
 
 public class CityRegisterValidator {
 
-    String hostName;
-    String login;
-    String password;
+    public String hostName;
+    public String login;
+    public String password;
 
     public AnswerCityRegister checkCityRegister(StudentOrder studentOrder) {
         System.out.println("CityRegister is running:" +

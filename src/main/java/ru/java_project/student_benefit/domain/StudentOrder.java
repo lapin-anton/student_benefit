@@ -1,11 +1,11 @@
-package student_benefit;
+package ru.java_project.student_benefit.domain;
 
 public class StudentOrder {
 
-    String hFirstName;
-    String hLastName;
-    String wFirstName;
-    String wLastName;
+    public String hFirstName;
+    public String hLastName;
+    public String wFirstName;
+    public String wLastName;
 
     @Override
     public String toString() {

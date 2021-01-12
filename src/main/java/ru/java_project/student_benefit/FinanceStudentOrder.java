@@ -1,4 +1,4 @@
-package student_benefit;
+package ru.java_project.student_benefit;
 
 public class FinanceStudentOrder {
     public static void main(String[] args) {
