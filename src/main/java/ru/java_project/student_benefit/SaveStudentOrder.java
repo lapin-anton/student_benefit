@@ -23,6 +23,8 @@ public class SaveStudentOrder {
         h.setSurName("Ivanov");
         h.setGivenName("Ivan");
         h.setPatronymic("Ivanovich");
+        h.setPassportNumber("123456");
+        System.out.println(h.getPersonString());
         order.setHusband(new Adult());
         Adult w = new Adult();
         w.setSurName("Ivanova");
