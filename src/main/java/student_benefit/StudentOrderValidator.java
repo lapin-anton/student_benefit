@@ -6,13 +6,16 @@ public class StudentOrderValidator {
     }
 
     public static void checkAll() {
-        StudentOrder order = readStudentOrder();
-        AnswerCityRegister answerCityRegister = checkCityRegister(order);
-        AnswerMarriage answerMarriage = checkMarriage(order);
-        AnswerChildren answerChildren = checkChildren(order);
-        AnswerStudent answerStudent = checkStudent(order);
-
-        sendMail(order);
+        while(true) {
+            StudentOrder order = readStudentOrder();
+            if (order == null) break;
+            AnswerCityRegister answerCityRegister = checkCityRegister(order);
+            if(!answerCityRegister.success) continue;
+            AnswerMarriage answerMarriage = checkMarriage(order);
+            AnswerChildren answerChildren = checkChildren(order);
+            AnswerStudent answerStudent = checkStudent(order);
+            sendMail(order);
+        }
     }
 
     private static void sendMail(StudentOrder order) {
@@ -25,7 +28,9 @@ public class StudentOrderValidator {
 
     public static AnswerCityRegister checkCityRegister(StudentOrder studentOrder) {
         System.out.println("CityRegister is running");
-        return new AnswerCityRegister();
+        AnswerCityRegister ans = new AnswerCityRegister();
+        ans.success = false;
+        return ans;
     }
 
     public static AnswerMarriage checkMarriage(StudentOrder studentOrder) {
