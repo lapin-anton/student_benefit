@@ -5,10 +5,10 @@ import ru.java_project.student_benefit.domain.StudentOrder;
 public class SaveStudentOrder {
     public static void main(String[] args) {
         StudentOrder order = new StudentOrder();
-        order.hFirstName = "Ivan";
-        order.hLastName = "Ivanov";
-        order.wFirstName = "Anna";
-        order.wLastName = "Ivanova";
+        order.sethFirstName("Ivan");
+        order.sethLastName("Ivanov");
+        order.setwFirstName("Anna");
+        order.setwLastName("Ivanova");
         long num = saveStudentOrder(order);
         System.out.println(num);
     }
