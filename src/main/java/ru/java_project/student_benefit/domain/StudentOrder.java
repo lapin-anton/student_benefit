@@ -2,6 +2,7 @@ package ru.java_project.student_benefit.domain;
 
 public class StudentOrder {
 
+    private long studentOrderId;
     private Adult husband;
     private Adult wife;
     private Child child;
@@ -28,5 +29,13 @@ public class StudentOrder {
 
     public void setChild(Child child) {
         this.child = child;
+    }
+
+    public long getStudentOrderId() {
+        return studentOrderId;
+    }
+
+    public void setStudentOrderId(long studentOrderId) {
+        this.studentOrderId = studentOrderId;
     }
 }

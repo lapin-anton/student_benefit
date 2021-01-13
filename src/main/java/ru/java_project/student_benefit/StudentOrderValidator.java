@@ -29,24 +29,30 @@ public class StudentOrderValidator {
     }
 
     public void checkAll() {
-        while(true) {
-            StudentOrder order = readStudentOrder();
-            if (order == null) break;
-            AnswerCityRegister answerCityRegister = checkCityRegister(order);
-            if(!answerCityRegister.success) continue;
-            AnswerMarriage answerMarriage = checkMarriage(order);
-            AnswerChildren answerChildren = checkChildren(order);
-            AnswerStudent answerStudent = checkStudent(order);
-            sendMail(order);
+        StudentOrder[] orders = readStudentOrders();
+        for (StudentOrder so: orders) {
+            checkOneOrder(so);
         }
+    }
+
+    public void checkOneOrder(StudentOrder order) {
+        AnswerCityRegister answerCityRegister = checkCityRegister(order);
+        AnswerMarriage answerMarriage = checkMarriage(order);
+        AnswerChildren answerChildren = checkChildren(order);
+        AnswerStudent answerStudent = checkStudent(order);
+        sendMail(order);
     }
 
     private void sendMail(StudentOrder order) {
         mailSender.sendMail(order);
     }
 
-    private StudentOrder readStudentOrder() {
-        return new StudentOrder();
+    private StudentOrder[] readStudentOrders() {
+        StudentOrder[] soArray = new StudentOrder[3];
+        for (int i = 0; i < soArray.length; i++) {
+            soArray[i] = SaveStudentOrder.buildStudentOrder(i);
+        }
+        return soArray;
     }
 
     public AnswerCityRegister checkCityRegister(StudentOrder studentOrder) {
