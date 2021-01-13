@@ -1,7 +1,9 @@
 package ru.java_project.student_benefit.validator;
 
 import ru.java_project.student_benefit.domain.AnswerCityRegister;
+import ru.java_project.student_benefit.domain.CityRegisterCheckerResponse;
 import ru.java_project.student_benefit.domain.StudentOrder;
+import ru.java_project.student_benefit.exception.CityRegisterException;
 
 public class CityRegisterValidator {
 
@@ -16,9 +18,13 @@ public class CityRegisterValidator {
     }
 
     public AnswerCityRegister checkCityRegister(StudentOrder studentOrder) {
-        personChecker.checkPerson(studentOrder.getHusband());
-        personChecker.checkPerson(studentOrder.getWife());
-        personChecker.checkPerson(studentOrder.getChild());
+        try {
+            CityRegisterCheckerResponse hans = personChecker.checkPerson(studentOrder.getHusband());
+            CityRegisterCheckerResponse wans = personChecker.checkPerson(studentOrder.getWife());
+            CityRegisterCheckerResponse cans = personChecker.checkPerson(studentOrder.getChild());
+        } catch (CityRegisterException e) {
+            e.printStackTrace();
+        }
 
         AnswerCityRegister ans = new AnswerCityRegister();
         ans.success = false;
