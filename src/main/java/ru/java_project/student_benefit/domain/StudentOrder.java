@@ -1,5 +1,8 @@
 package ru.java_project.student_benefit.domain;
 
+import ru.java_project.student_benefit.domain.person.Adult;
+import ru.java_project.student_benefit.domain.person.Child;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

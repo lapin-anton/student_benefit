@@ -1,4 +1,6 @@
-package ru.java_project.student_benefit.domain;
+package ru.java_project.student_benefit.domain.person;
+
+import ru.java_project.student_benefit.domain.person.Person;
 
 import java.time.LocalDate;
 

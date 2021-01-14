@@ -1,4 +1,4 @@
-package ru.java_project.student_benefit.domain;
+package ru.java_project.student_benefit.domain.address;
 
 public class Address {
     // address

@@ -1,8 +1,8 @@
 package ru.java_project.student_benefit;
 
-import ru.java_project.student_benefit.domain.Address;
-import ru.java_project.student_benefit.domain.Adult;
-import ru.java_project.student_benefit.domain.Child;
+import ru.java_project.student_benefit.domain.address.Address;
+import ru.java_project.student_benefit.domain.person.Adult;
+import ru.java_project.student_benefit.domain.person.Child;
 import ru.java_project.student_benefit.domain.StudentOrder;
 
 import java.time.LocalDate;

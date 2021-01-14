@@ -1,9 +1,9 @@
 package ru.java_project.student_benefit.validator;
 
-import ru.java_project.student_benefit.domain.Adult;
-import ru.java_project.student_benefit.domain.Child;
-import ru.java_project.student_benefit.domain.CityRegisterCheckerResponse;
-import ru.java_project.student_benefit.domain.Person;
+import ru.java_project.student_benefit.domain.person.Adult;
+import ru.java_project.student_benefit.domain.person.Child;
+import ru.java_project.student_benefit.domain.register.CityRegisterResponse;
+import ru.java_project.student_benefit.domain.person.Person;
 import ru.java_project.student_benefit.exception.CityRegisterException;
 
 public class FakeCityRegisterChecker implements CityRegisterChecker {
@@ -15,8 +15,8 @@ public class FakeCityRegisterChecker implements CityRegisterChecker {
     public static final String ERROR_1 = "1002";
     public static final String ERROR_2 = "2002";
 
-    public CityRegisterCheckerResponse checkPerson(Person person) throws CityRegisterException {
-        CityRegisterCheckerResponse res = new CityRegisterCheckerResponse();
+    public CityRegisterResponse checkPerson(Person person) throws CityRegisterException {
+        CityRegisterResponse res = new CityRegisterResponse();
         if (person instanceof Adult) {
             Adult t = (Adult) person;
             String ps = t.getPassportSer();

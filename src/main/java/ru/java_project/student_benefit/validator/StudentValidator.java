@@ -1,6 +1,6 @@
 package ru.java_project.student_benefit.validator;
 
-import ru.java_project.student_benefit.domain.AnswerStudent;
+import ru.java_project.student_benefit.domain.student.AnswerStudent;
 import ru.java_project.student_benefit.domain.StudentOrder;
 
 public class StudentValidator {

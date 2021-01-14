@@ -1,8 +1,10 @@
 package ru.java_project.student_benefit.validator;
 
-import ru.java_project.student_benefit.domain.AnswerCityRegister;
-import ru.java_project.student_benefit.domain.Child;
-import ru.java_project.student_benefit.domain.CityRegisterCheckerResponse;
+import ru.java_project.student_benefit.domain.person.Person;
+import ru.java_project.student_benefit.domain.register.AnswerCityRegister;
+import ru.java_project.student_benefit.domain.person.Child;
+import ru.java_project.student_benefit.domain.register.AnswerCityRegisterItem;
+import ru.java_project.student_benefit.domain.register.CityRegisterResponse;
 import ru.java_project.student_benefit.domain.StudentOrder;
 import ru.java_project.student_benefit.exception.CityRegisterException;
 
@@ -21,20 +23,22 @@ public class CityRegisterValidator {
     }
 
     public AnswerCityRegister checkCityRegister(StudentOrder studentOrder) {
+        AnswerCityRegister ans = new AnswerCityRegister();
+        ans.addItem(checkPerson(studentOrder.getHusband()));
+        ans.addItem(checkPerson(studentOrder.getWife()));
+        for (Child child: studentOrder.getChildren()) {
+            ans.addItem(checkPerson(child));
+        }
+        return ans;
+    }
+
+    private AnswerCityRegisterItem checkPerson(Person person) {
+        AnswerCityRegisterItem item;
         try {
-            CityRegisterCheckerResponse hans = personChecker.checkPerson(studentOrder.getHusband());
-            CityRegisterCheckerResponse wans = personChecker.checkPerson(studentOrder.getWife());
-            List<Child> children = studentOrder.getChildren();
-            CityRegisterCheckerResponse cans;
-            for (Child child: children) {
-                cans = personChecker.checkPerson(child);
-            }
+            personChecker.checkPerson(person);
         } catch (CityRegisterException e) {
             e.printStackTrace();
         }
-
-        AnswerCityRegister ans = new AnswerCityRegister();
-        ans.success = false;
-        return ans;
+        return null;
     }
 }

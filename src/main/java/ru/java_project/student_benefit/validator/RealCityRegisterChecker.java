@@ -1,10 +1,10 @@
 package ru.java_project.student_benefit.validator;
 
-import ru.java_project.student_benefit.domain.CityRegisterCheckerResponse;
-import ru.java_project.student_benefit.domain.Person;
+import ru.java_project.student_benefit.domain.register.CityRegisterResponse;
+import ru.java_project.student_benefit.domain.person.Person;
 
 public class RealCityRegisterChecker implements CityRegisterChecker {
-    public CityRegisterCheckerResponse checkPerson(Person person) {
+    public CityRegisterResponse checkPerson(Person person) {
         return null;
     }
 }
