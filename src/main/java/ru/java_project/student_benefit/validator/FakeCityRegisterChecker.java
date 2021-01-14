@@ -6,8 +6,6 @@ import ru.java_project.student_benefit.domain.CityRegisterCheckerResponse;
 import ru.java_project.student_benefit.domain.Person;
 import ru.java_project.student_benefit.exception.CityRegisterException;
 
-import java.sql.Struct;
-
 public class FakeCityRegisterChecker implements CityRegisterChecker {
 
     public static final String GOOD_1 = "1000";
