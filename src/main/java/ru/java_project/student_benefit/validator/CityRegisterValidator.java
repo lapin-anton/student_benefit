@@ -41,14 +41,17 @@ public class CityRegisterValidator {
             CityRegisterResponse tmp = personChecker.checkPerson(person);
             status = (tmp.isExisting()) ? AnswerCityRegisterItem.CityStatus.YES: AnswerCityRegisterItem.CityStatus.NO;
 
-        } catch (CityRegisterException e) {
-            error = new AnswerCityRegisterItem.CityError(e.getCode(), e.getMessage());
+        } catch (CityRegisterException | TransportException e) {
             status = AnswerCityRegisterItem.CityStatus.ERROR;
-        } catch (TransportException e) {
-            error = new AnswerCityRegisterItem.CityError(IN_CODE, "transport error");
-            status = AnswerCityRegisterItem.CityStatus.ERROR;
+            if (e instanceof CityRegisterException) {
+                CityRegisterException t = (CityRegisterException) e;
+                error = new AnswerCityRegisterItem.CityError(t.getCode(), t.getMessage());
+            } else {
+                TransportException t = (TransportException) e;
+                error = new AnswerCityRegisterItem.CityError(IN_CODE, "transport error");
+             }
         }
-        item = new AnswerCityRegisterItem(status, person);
+        item = new AnswerCityRegisterItem(status, person, error);
         return item;
     }
 }

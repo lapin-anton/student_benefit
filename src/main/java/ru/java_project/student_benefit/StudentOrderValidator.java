@@ -44,10 +44,10 @@ public class StudentOrderValidator {
 
     public void checkOneOrder(StudentOrder order) {
         AnswerCityRegister answerCityRegister = checkCityRegister(order);
-        AnswerMarriage answerMarriage = checkMarriage(order);
-        AnswerChildren answerChildren = checkChildren(order);
-        AnswerStudent answerStudent = checkStudent(order);
-        sendMail(order);
+//        AnswerMarriage answerMarriage = checkMarriage(order);
+//        AnswerChildren answerChildren = checkChildren(order);
+//        AnswerStudent answerStudent = checkStudent(order);
+//        sendMail(order);
     }
 
     private void sendMail(StudentOrder order) {
