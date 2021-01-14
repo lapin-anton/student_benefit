@@ -1,11 +1,16 @@
 package ru.java_project.student_benefit.domain;
 
+import java.time.LocalDate;
+
 public class StudentOrder {
 
     private long studentOrderId;
     private Adult husband;
     private Adult wife;
     private Child child;
+    private String marriageCertificateId;
+    private LocalDate marriageDate;
+    private String marriageOffice;
 
     public Adult getHusband() {
         return husband;
@@ -37,5 +42,29 @@ public class StudentOrder {
 
     public void setStudentOrderId(long studentOrderId) {
         this.studentOrderId = studentOrderId;
+    }
+
+    public String getMarriageCertificateId() {
+        return marriageCertificateId;
+    }
+
+    public void setMarriageCertificateId(String marriageCertificateId) {
+        this.marriageCertificateId = marriageCertificateId;
+    }
+
+    public LocalDate getMarriageDate() {
+        return marriageDate;
+    }
+
+    public void setMarriageDate(LocalDate marriageDate) {
+        this.marriageDate = marriageDate;
+    }
+
+    public String getMarriageOffice() {
+        return marriageOffice;
+    }
+
+    public void setMarriageOffice(String marriageOffice) {
+        this.marriageOffice = marriageOffice;
     }
 }

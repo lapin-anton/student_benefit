@@ -1,8 +1,11 @@
 package ru.java_project.student_benefit;
 
+import ru.java_project.student_benefit.domain.Address;
 import ru.java_project.student_benefit.domain.Adult;
 import ru.java_project.student_benefit.domain.Child;
 import ru.java_project.student_benefit.domain.StudentOrder;
+
+import java.time.LocalDate;
 
 public class SaveStudentOrder {
     public static void main(String[] args) {
@@ -20,21 +23,40 @@ public class SaveStudentOrder {
     static StudentOrder buildStudentOrder(long id) {
         StudentOrder order = new StudentOrder();
         order.setStudentOrderId(id);
-        Adult h = new Adult();
-        h.setSurName("Ivanov");
-        h.setGivenName("Ivan");
-        h.setPatronymic("Ivanovich");
-        h.setPassportNumber("123456");
-        order.setHusband(new Adult());
-        Adult w = new Adult();
-        w.setSurName("Ivanova");
-        w.setGivenName("Anna");
-        w.setPatronymic("Sergeevna");
-        order.setWife(w);
-        Child c = new Child();
-        c.setSurName("Ivanov");
-        c.setGivenName("Nikolay");
-        c.setPatronymic("Ivanovna");
+        order.setMarriageCertificateId("" + (123456000 + id));
+        order.setMarriageDate(LocalDate.of(2016, 7, 4));
+        order.setMarriageOffice("Отдел ЗАГС");
+
+        Address address = new Address("195000", "Заневский пр.", "12", "", "142");
+
+        //Муж
+        Adult husband = new Adult("Петров", "Виктор", "Сергеевич", LocalDate.of(1997, 4, 7));
+        husband.setPassportSer("" + (1000 + id));
+        husband.setPassportNumber("" + (100000 + id));
+        husband.setIssueDate(LocalDate.of(2017, 9, 15));
+        husband.setIssueDepartment("Отдел полиции №" + id);
+        husband.setStudentId("" + (10000 + id));
+        husband.setAddress(address);
+
+        //Жена
+        Adult wife = new Adult("Петрова", "Ирина", "Николаевна", LocalDate.of(1998, 2, 28));
+        wife.setPassportSer("" + (2000 + id));
+        wife.setPassportNumber("" + (200000 + id));
+        wife.setIssueDate(LocalDate.of(2018, 3, 5));
+        wife.setIssueDepartment("Отдел полиции №" + id);
+        wife.setStudentId("" + (20000 + id));
+        wife.setAddress(address);
+
+        //Ребенок 1
+        Child child_1 = new Child("Петрова", "Анна", "Викторовна", LocalDate.of(2018, 4, 7));
+        child_1.setCertificateNumber("" + (300000 + id));
+        child_1.setIssueDate(LocalDate.of(2018, 4, 20));
+        child_1.setIssueDepartment("Отдел ЗАГС №" + id);
+        child_1.setAddress(address);
+
+        order.setHusband(husband);
+        order.setWife(wife);
+        order.setChild(child_1);
         return order;
     }
 }
