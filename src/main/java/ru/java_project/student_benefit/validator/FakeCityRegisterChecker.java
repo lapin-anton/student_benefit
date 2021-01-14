@@ -5,6 +5,7 @@ import ru.java_project.student_benefit.domain.person.Child;
 import ru.java_project.student_benefit.domain.register.CityRegisterResponse;
 import ru.java_project.student_benefit.domain.person.Person;
 import ru.java_project.student_benefit.exception.CityRegisterException;
+import ru.java_project.student_benefit.exception.TransportException;
 
 public class FakeCityRegisterChecker implements CityRegisterChecker {
 
@@ -14,8 +15,10 @@ public class FakeCityRegisterChecker implements CityRegisterChecker {
     public static final String BAD_2 = "2001";
     public static final String ERROR_1 = "1002";
     public static final String ERROR_2 = "2002";
+    public static final String ERROR_T_1 = "1003";
+    public static final String ERROR_T_2 = "2003";
 
-    public CityRegisterResponse checkPerson(Person person) throws CityRegisterException {
+    public CityRegisterResponse checkPerson(Person person) throws CityRegisterException, TransportException {
         CityRegisterResponse res = new CityRegisterResponse();
         if (person instanceof Adult) {
             Adult t = (Adult) person;
@@ -28,7 +31,11 @@ public class FakeCityRegisterChecker implements CityRegisterChecker {
                 res.setExisting(false);
             }
             if(ps.equals(ERROR_1) || ps.equals(ERROR_2)) {
-                CityRegisterException ex = new CityRegisterException("Fake error");
+                CityRegisterException ex = new CityRegisterException("1", "Fake register error");
+                throw ex;
+            }
+            if(ps.equals(ERROR_T_1) || ps.equals(ERROR_T_2)) {
+                TransportException ex = new TransportException("Fake Transport error");
                 throw ex;
             }
         }

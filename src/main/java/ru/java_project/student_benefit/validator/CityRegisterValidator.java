@@ -7,10 +7,11 @@ import ru.java_project.student_benefit.domain.register.AnswerCityRegisterItem;
 import ru.java_project.student_benefit.domain.register.CityRegisterResponse;
 import ru.java_project.student_benefit.domain.StudentOrder;
 import ru.java_project.student_benefit.exception.CityRegisterException;
-
-import java.util.List;
+import ru.java_project.student_benefit.exception.TransportException;
 
 public class CityRegisterValidator {
+
+    public static final String IN_CODE = "NO_GRN";
 
     public String hostName;
     public String login;
@@ -34,11 +35,20 @@ public class CityRegisterValidator {
 
     private AnswerCityRegisterItem checkPerson(Person person) {
         AnswerCityRegisterItem item;
+        AnswerCityRegisterItem.CityStatus status = null;
+        AnswerCityRegisterItem.CityError error = null;
         try {
-            personChecker.checkPerson(person);
+            CityRegisterResponse tmp = personChecker.checkPerson(person);
+            status = (tmp.isExisting()) ? AnswerCityRegisterItem.CityStatus.YES: AnswerCityRegisterItem.CityStatus.NO;
+
         } catch (CityRegisterException e) {
-            e.printStackTrace();
+            error = new AnswerCityRegisterItem.CityError(e.getCode(), e.getMessage());
+            status = AnswerCityRegisterItem.CityStatus.ERROR;
+        } catch (TransportException e) {
+            error = new AnswerCityRegisterItem.CityError(IN_CODE, "transport error");
+            status = AnswerCityRegisterItem.CityStatus.ERROR;
         }
-        return null;
+        item = new AnswerCityRegisterItem(status, person);
+        return item;
     }
 }
