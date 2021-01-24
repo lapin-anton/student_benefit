@@ -1,6 +1,7 @@
 package ru.java_project.student_benefit;
 
 import ru.java_project.student_benefit.domain.address.Address;
+import ru.java_project.student_benefit.domain.address.Street;
 import ru.java_project.student_benefit.domain.person.Adult;
 import ru.java_project.student_benefit.domain.person.Child;
 import ru.java_project.student_benefit.domain.StudentOrder;
@@ -26,8 +27,8 @@ public class SaveStudentOrder {
         order.setMarriageCertificateId("" + (123456000 + id));
         order.setMarriageDate(LocalDate.of(2016, 7, 4));
         order.setMarriageOffice("Отдел ЗАГС");
-
-        Address address = new Address("195000", "Заневский пр.", "12", "", "142");
+        Street street = new Street(1L, "Заневский пр.");
+        Address address = new Address("195000", street, "12", "", "142");
 
         //Муж
         Adult husband = new Adult("Петров", "Виктор", "Сергеевич", LocalDate.of(1997, 4, 7));
