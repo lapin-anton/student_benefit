@@ -16,6 +16,8 @@ public class StudentOrder {
     private String marriageCertificateId;
     private LocalDate marriageDate;
     private RegisterOffice registerOffice;
+    private LocalDate studentOrderDate;
+    private StudentOrderStatus studentOrderStatus;
 
     public Adult getHusband() {
         return husband;
@@ -74,5 +76,21 @@ public class StudentOrder {
 
     public void setRegisterOffice(RegisterOffice registerOffice) {
         this.registerOffice = registerOffice;
+    }
+
+    public LocalDate getStudentOrderDate() {
+        return studentOrderDate;
+    }
+
+    public void setStudentOrderDate(LocalDate studentOrderDate) {
+        this.studentOrderDate = studentOrderDate;
+    }
+
+    public StudentOrderStatus getStudentOrderStatus() {
+        return studentOrderStatus;
+    }
+
+    public void setStudentOrderStatus(StudentOrderStatus studentOrderStatus) {
+        this.studentOrderStatus = studentOrderStatus;
     }
 }
