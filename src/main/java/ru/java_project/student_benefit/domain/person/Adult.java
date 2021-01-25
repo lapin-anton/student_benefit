@@ -1,5 +1,6 @@
 package ru.java_project.student_benefit.domain.person;
 
+import ru.java_project.student_benefit.domain.PassportOffice;
 import ru.java_project.student_benefit.domain.person.Person;
 
 import java.time.LocalDate;
@@ -8,7 +9,7 @@ public class Adult extends Person {
     private String passportSer;
     private String passportNumber;
     private LocalDate issueDate;
-    private String issueDepartment;
+    private PassportOffice passportOffice;
     private String university;
     private String studentId;
 
@@ -44,12 +45,12 @@ public class Adult extends Person {
         this.issueDate = issueDate;
     }
 
-    public String getIssueDepartment() {
-        return issueDepartment;
+    public PassportOffice getPassportOffice() {
+        return passportOffice;
     }
 
-    public void setIssueDepartment(String issueDepartment) {
-        this.issueDepartment = issueDepartment;
+    public void setPassportOffice(PassportOffice passportOffice) {
+        this.passportOffice = passportOffice;
     }
 
     public String getUniversity() {

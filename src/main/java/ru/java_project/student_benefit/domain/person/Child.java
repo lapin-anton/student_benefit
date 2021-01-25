@@ -1,5 +1,6 @@
 package ru.java_project.student_benefit.domain.person;
 
+import ru.java_project.student_benefit.domain.RegisterOffice;
 import ru.java_project.student_benefit.domain.person.Person;
 
 import java.time.LocalDate;
@@ -7,7 +8,7 @@ import java.time.LocalDate;
 public class Child extends Person {
     private String certificateNumber;
     private LocalDate issueDate;
-    private String issueDepartment;
+    private RegisterOffice registerOffice;
 
     public Child() {
     }
@@ -32,11 +33,11 @@ public class Child extends Person {
         this.issueDate = issueDate;
     }
 
-    public String getIssueDepartment() {
-        return issueDepartment;
+    public RegisterOffice getRegisterOffice() {
+        return registerOffice;
     }
 
-    public void setIssueDepartment(String issueDepartment) {
-        this.issueDepartment = issueDepartment;
+    public void setRegisterOffice(RegisterOffice registerOffice) {
+        this.registerOffice = registerOffice;
     }
 }
