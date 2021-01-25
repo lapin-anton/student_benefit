@@ -1,5 +1,6 @@
 package ru.java_project.student_benefit.dao;
 
+import ru.java_project.student_benefit.config.Config;
 import ru.java_project.student_benefit.domain.address.Street;
 import ru.java_project.student_benefit.exception.DaoException;
 
@@ -13,8 +14,8 @@ public class DictionaryDAOImpl implements DictionaryDAO {
 
     private Connection getConnection() throws SQLException {
         Connection connection = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/jc_student?useUnicode=true&serverTimezone=UTC",
-                "root", "1111");
+                Config.getProperty(Config.DB_URL),
+                Config.getProperty(Config.DB_LOGIN), Config.getProperty(Config.DB_PASSWORD));
         return connection;
     }
 
