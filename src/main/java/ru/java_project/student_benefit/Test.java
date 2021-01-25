@@ -1,6 +1,7 @@
 package ru.java_project.student_benefit;
 
 import ru.java_project.student_benefit.dao.DictionaryDAOImpl;
+import ru.java_project.student_benefit.domain.CountryArea;
 import ru.java_project.student_benefit.domain.PassportOffice;
 import ru.java_project.student_benefit.domain.RegisterOffice;
 import ru.java_project.student_benefit.domain.address.Street;
@@ -23,6 +24,11 @@ public class Test {
         List<RegisterOffice> r_offices = dao.findRegisterOffices("010010000000");
         for (RegisterOffice po: r_offices) {
             System.out.println(po);
+        }
+
+        List<CountryArea> countryAreas = dao.findArea("020010010000");
+        for (CountryArea ca: countryAreas) {
+            System.out.println(ca);
         }
 
     }

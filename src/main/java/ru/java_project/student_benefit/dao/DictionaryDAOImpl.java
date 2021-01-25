@@ -1,6 +1,7 @@
 package ru.java_project.student_benefit.dao;
 
 import ru.java_project.student_benefit.config.Config;
+import ru.java_project.student_benefit.domain.CountryArea;
 import ru.java_project.student_benefit.domain.PassportOffice;
 import ru.java_project.student_benefit.domain.RegisterOffice;
 import ru.java_project.student_benefit.domain.address.Street;
@@ -15,6 +16,8 @@ public class DictionaryDAOImpl implements DictionaryDAO {
     private static final String GET_STREET = "SELECT * FROM jc_street WHERE UPPER(street_name) LIKE UPPER(?)";
     private static final String GET_PASSPORT_OFFICE = "SELECT * FROM jc_passport_office WHERE office_area_id=?";
     private static final String GET_REGISTER_OFFICE = "SELECT * FROM jc_register_office WHERE r_area_id=?";
+    private static final String GET_AREA = "SELECT * FROM jc_country_struct WHERE area_id like ? " +
+            "and area_id <> ?";
 
     private Connection getConnection() throws SQLException {
         Connection connection = DriverManager.getConnection(
@@ -73,5 +76,38 @@ public class DictionaryDAOImpl implements DictionaryDAO {
             throw new DaoException(e);
         }
         return result;
+    }
+
+    @Override
+    public List<CountryArea> findArea(String areaId) throws Exception {
+        List<CountryArea> result = new ArrayList<>();
+        String param1 = buildParam(areaId);
+        String param2 = areaId;
+        try (Connection connection = getConnection();
+             PreparedStatement stmt = connection.prepareStatement(GET_AREA)) {
+            stmt.setString(1, param1);
+            stmt.setString(2, param2);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                result.add(new CountryArea(rs.getString("area_id"),
+                        rs.getString("area_name")));
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return result;
+    }
+
+    private String buildParam(String areaId) throws SQLException{
+        if(areaId == null || areaId.trim().equals("")) {
+            return "__0000000000";
+        } else if (areaId.endsWith("0000000000")) {
+            return areaId.substring(0, 2) + "___0000000";
+        } else if (areaId.endsWith("0000000")) {
+            return areaId.substring(0, 5) + "___0000";
+        } else if (areaId.endsWith("0000")) {
+            return areaId.substring(0, 8) + "____";
+        }
+        throw new SQLException("invalid parameter areaId" + areaId);
     }
 }
