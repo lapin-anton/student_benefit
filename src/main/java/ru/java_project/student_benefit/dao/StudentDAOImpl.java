@@ -3,9 +3,13 @@ package ru.java_project.student_benefit.dao;
 import ru.java_project.student_benefit.config.Config;
 import ru.java_project.student_benefit.domain.StudentOrder;
 import ru.java_project.student_benefit.domain.StudentOrderStatus;
+import ru.java_project.student_benefit.domain.address.Address;
+import ru.java_project.student_benefit.domain.person.Adult;
+import ru.java_project.student_benefit.domain.person.Child;
 import ru.java_project.student_benefit.exception.DaoException;
 
 import java.sql.*;
+import java.time.LocalDate;
 
 public class StudentDAOImpl implements StudentOrderDAO {
 
@@ -47,6 +51,23 @@ public class StudentDAOImpl implements StudentOrderDAO {
                     "?,?,?,?,?,?,?,?,?,?," +
                     "?,?,?,?,?,?,?,?,?,?,?)";
 
+    private static final String INSERT_CHILD = "INSERT INTO `jc_student_child`\n" +
+            "(`student_order_id`," +
+            "`c_sur_name`," +
+            "`c_given_name`," +
+            "`c_patronymic`," +
+            "`c_birth_date`," +
+            "`c_certificate_number`," +
+            "`c_registration_date`," +
+            "`c_register_office_id`," +
+            "`c_post_index`," +
+            "`c_street_code`," +
+            "`c_building`," +
+            "`c_extension`," +
+            "`c_apartment`)" +
+            "VALUES" +
+            "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
     //TODO make one method
     private Connection getConnection() throws SQLException {
         Connection connection = DriverManager.getConnection(
@@ -57,43 +78,82 @@ public class StudentDAOImpl implements StudentOrderDAO {
 
     @Override
     public Long saveStudentOrder(StudentOrder order) throws DaoException {
-        Long result = 0L;
+        Long result = -1L;
         try (Connection connection = getConnection();
-            PreparedStatement stmt = connection.prepareStatement(INSERT_ORDER)) {
-            stmt.setString(1, order.getHusband().getSurName());
-            stmt.setString(2, order.getHusband().getGivenName());
-            stmt.setString(3, order.getHusband().getPatronymic());
-            stmt.setDate(4, Date.valueOf(order.getHusband().getDateOfBirth()));
-            stmt.setString(5, order.getHusband().getAddress().getPostCode());
-            stmt.setLong(6, order.getHusband().getAddress().getStreet().getStreetCode());
-            stmt.setString(7, order.getHusband().getAddress().getBuilding());
-            stmt.setString(8, order.getHusband().getAddress().getExtension());
-            stmt.setString(9, order.getHusband().getAddress().getApartment());
-            stmt.setString(10, order.getWife().getSurName());
-            stmt.setString(11, order.getWife().getGivenName());
-            stmt.setString(12, order.getWife().getPatronymic());
-            stmt.setDate(13, Date.valueOf(order.getWife().getDateOfBirth()));
-            stmt.setString(14, order.getWife().getAddress().getPostCode());
-            stmt.setLong(15, order.getWife().getAddress().getStreet().getStreetCode());
-            stmt.setString(16, order.getWife().getAddress().getBuilding());
-            stmt.setString(17, order.getWife().getAddress().getExtension());
-            stmt.setString(18, order.getWife().getAddress().getApartment());
+            PreparedStatement stmt = connection.prepareStatement(INSERT_ORDER, new String[]{"id"})) {
+            Adult husband = order.getHusband();
+            Adult wife = order.getWife();
+            setAdultParams(husband, stmt, 1);
+            setAdultParams(wife, stmt, 10);
+
             stmt.setString(19, order.getMarriageCertificateId());
             stmt.setLong(20, order.getRegisterOffice().getOfficeId());
             stmt.setDate(21, Date.valueOf(order.getMarriageDate()));
-            stmt.setString(22, order.getHusband().getPassportSer());
-            stmt.setString(23, order.getHusband().getPassportNumber());
-            stmt.setDate(24, Date.valueOf(order.getHusband().getIssueDate()));
-            stmt.setLong(25, order.getHusband().getPassportOffice().getOfficeId());
-            stmt.setString(26, order.getWife().getPassportSer());
-            stmt.setString(27, order.getHusband().getPassportNumber());
-            stmt.setDate(28, Date.valueOf(order.getHusband().getIssueDate()));
-            stmt.setLong(29, order.getHusband().getPassportOffice().getOfficeId());
+
+            setPassportData(stmt, husband, 22);
+            setPassportData(stmt, wife, 26);
+
             stmt.setInt(30, StudentOrderStatus.START.ordinal());
-            stmt.setDate(31, Date.valueOf(order.getStudentOrderDate()));
+            stmt.setDate(31, Date.valueOf(LocalDate.now()));
+
+            stmt.executeUpdate();
+
+            ResultSet gkRs = stmt.getGeneratedKeys();
+
+            if(gkRs.next()) {
+                result = gkRs.getLong(1);
+            }
+            gkRs.close();
+
+            saveChildren(connection, order, result);
+
         } catch (SQLException e) {
             throw new DaoException(e);
         }
         return result;
+    }
+
+    private void saveChildren(Connection connection, StudentOrder order, Long orderId) throws SQLException {
+        try(PreparedStatement stmt = connection.prepareStatement(INSERT_CHILD)) {
+            for (Child child : order.getChildren()) {
+                stmt.setLong(1, orderId);
+                stmt.setString(2, child.getSurName());
+                stmt.setString(3, child.getGivenName());
+                stmt.setString(4, child.getPatronymic());
+                stmt.setDate(5, Date.valueOf(child.getDateOfBirth()));
+                stmt.setString(6, child.getCertificateNumber());
+                stmt.setDate(7, Date.valueOf(child.getIssueDate()));
+                stmt.setLong(8, child.getRegisterOffice().getOfficeId());
+                Address address = child.getAddress();
+                stmt.setString(9, address.getPostCode());
+                stmt.setLong(10, address.getStreet().getStreetCode());
+                stmt.setString(11, address.getBuilding());
+                stmt.setString(12, address.getExtension());
+                stmt.setString(13, address.getApartment());
+
+                stmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+
+        }
+    }
+
+    private void setPassportData(PreparedStatement stmt, Adult adult, int start) throws SQLException {
+        stmt.setString(start, adult.getPassportSer());
+        stmt.setString(start + 1, adult.getPassportNumber());
+        stmt.setDate(start + 2, Date.valueOf(adult.getIssueDate()));
+        stmt.setLong(start + 3, adult.getPassportOffice().getOfficeId());
+    }
+
+    private void setAdultParams(Adult adult, PreparedStatement stmt, int start) throws SQLException {
+        stmt.setString(start, adult.getSurName());
+        stmt.setString(start + 1, adult.getGivenName());
+        stmt.setString(start + 2, adult.getPatronymic());
+        stmt.setDate(start + 3, Date.valueOf(adult.getDateOfBirth()));
+        stmt.setString(start + 4, adult.getAddress().getPostCode());
+        stmt.setLong(start + 5, adult.getAddress().getStreet().getStreetCode());
+        stmt.setString(start + 6, adult.getAddress().getBuilding());
+        stmt.setString(start + 7, adult.getAddress().getExtension());
+        stmt.setString(start + 8, adult.getAddress().getApartment());
     }
 }
