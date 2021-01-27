@@ -4,6 +4,7 @@ import ru.java_project.student_benefit.domain.person.Adult;
 import ru.java_project.student_benefit.domain.person.Child;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class StudentOrder {
     private String marriageCertificateId;
     private LocalDate marriageDate;
     private RegisterOffice registerOffice;
-    private LocalDate studentOrderDate;
+    private LocalDateTime studentOrderDate;
     private StudentOrderStatus studentOrderStatus;
 
     public Adult getHusband() {
@@ -78,11 +79,11 @@ public class StudentOrder {
         this.registerOffice = registerOffice;
     }
 
-    public LocalDate getStudentOrderDate() {
+    public LocalDateTime getStudentOrderDate() {
         return studentOrderDate;
     }
 
-    public void setStudentOrderDate(LocalDate studentOrderDate) {
+    public void setStudentOrderDate(LocalDateTime studentOrderDate) {
         this.studentOrderDate = studentOrderDate;
     }
 
@@ -92,5 +93,20 @@ public class StudentOrder {
 
     public void setStudentOrderStatus(StudentOrderStatus studentOrderStatus) {
         this.studentOrderStatus = studentOrderStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "StudentOrder{" +
+                "studentOrderId=" + studentOrderId +
+                ", husband=" + husband +
+                ", wife=" + wife +
+                ", children=" + children +
+                ", marriageCertificateId='" + marriageCertificateId + '\'' +
+                ", marriageDate=" + marriageDate +
+                ", registerOffice=" + registerOffice +
+                ", studentOrderDate=" + studentOrderDate +
+                ", studentOrderStatus=" + studentOrderStatus +
+                '}';
     }
 }

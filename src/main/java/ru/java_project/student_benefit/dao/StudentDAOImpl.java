@@ -1,6 +1,7 @@
 package ru.java_project.student_benefit.dao;
 
 import ru.java_project.student_benefit.config.Config;
+import ru.java_project.student_benefit.domain.RegisterOffice;
 import ru.java_project.student_benefit.domain.StudentOrder;
 import ru.java_project.student_benefit.domain.StudentOrderStatus;
 import ru.java_project.student_benefit.domain.address.Address;
@@ -10,7 +11,10 @@ import ru.java_project.student_benefit.domain.person.Person;
 import ru.java_project.student_benefit.exception.DaoException;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentDAOImpl implements StudentOrderDAO {
 
@@ -43,6 +47,9 @@ public class StudentDAOImpl implements StudentOrderDAO {
                     " ?, ?, ?, ?, " +
                     " ?, ?, ?, ?, " +
                     " ?, ?)";
+
+    private static final String SELECT_ORDERS =
+            "SELECT * FROM jc_student_order WHERE student_order_status = 0 ORDER BY student_order_date";
 
     //TODO make one method
     private Connection getConnection() throws SQLException {
@@ -143,4 +150,44 @@ public class StudentDAOImpl implements StudentOrderDAO {
         stmt.setString(start + 4, adult_address.getApartment());
     }
 
+    @Override
+    public List<StudentOrder> getStudentOrders() throws DaoException {
+        List<StudentOrder> result = new ArrayList<>();
+        try(Connection connection = getConnection();
+            Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery(SELECT_ORDERS);
+            while (rs.next()) {
+                StudentOrder order = new StudentOrder();
+                fillStudentOrder(rs, order);
+                fillWedding(rs, order);
+                result.add(order);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return result;
+    }
+
+    private void fillWedding(ResultSet rs, StudentOrder order) throws SQLException {
+        order.setMarriageCertificateId(rs.getString("certificate_id"));
+        Long roId = rs.getLong("register_office_id");
+        RegisterOffice ro = new RegisterOffice(roId, "", "");
+        order.setRegisterOffice(ro);
+        order.setMarriageDate(rs.getDate("marriage_date").toLocalDate());
+    }
+
+    private void fillStudentOrder(ResultSet rs, StudentOrder order) throws SQLException{
+        order.setStudentOrderId(rs.getLong("student_order_id"));
+        order.setStudentOrderStatus(StudentOrderStatus.fromValue(rs.getInt("student_order_status")));
+        order.setStudentOrderDate(rs.getTimestamp("student_order_date").toLocalDateTime());
+        Adult husband = new Adult();
+//        husband.setSurName(rs.getString("h_sur_name"));
+//        husband.setGivenName(rs.getString("h_given_name"));
+//        husband.setPatronymic(rs.getString("h_patronymic"));
+//        husband.setDateOfBirth(rs.getDate("h_date_of_birth").toLocalDate());
+//        husband.setPassportSer(rs.getString("h_passport_seria"));
+//        husband.setPassportNumber(rs.getString("h_passport_number"));
+//        husband.setIssueDate(rs.getDate("h_passport_date").toLocalDate());
+    }
 }

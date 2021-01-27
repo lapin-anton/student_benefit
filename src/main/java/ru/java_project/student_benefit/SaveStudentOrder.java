@@ -11,16 +11,22 @@ import ru.java_project.student_benefit.domain.person.Child;
 import ru.java_project.student_benefit.domain.StudentOrder;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class SaveStudentOrder {
     public static void main(String[] args) throws Exception {
 //        long num = saveStudentOrder(buildStudentOrder(0));
 //        System.out.println(num);
 
-        StudentOrder order = buildStudentOrder(1L);
+//        StudentOrder order = buildStudentOrder(1L);
         StudentDAOImpl dao = new StudentDAOImpl();
-        Long id = dao.saveStudentOrder(order);
-        System.out.println(id);
+//        Long id = dao.saveStudentOrder(order);
+//        System.out.println(id);
+
+        List<StudentOrder> orderList = dao.getStudentOrders();
+        for (StudentOrder order: orderList) {
+            System.out.println(order);
+        }
     }
 
     public static long saveStudentOrder(StudentOrder order) {
