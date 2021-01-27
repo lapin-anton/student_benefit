@@ -3,6 +3,7 @@ package ru.java_project.student_benefit;
 import ru.java_project.student_benefit.dao.StudentDAOImpl;
 import ru.java_project.student_benefit.domain.PassportOffice;
 import ru.java_project.student_benefit.domain.RegisterOffice;
+import ru.java_project.student_benefit.domain.University;
 import ru.java_project.student_benefit.domain.address.Address;
 import ru.java_project.student_benefit.domain.address.Street;
 import ru.java_project.student_benefit.domain.person.Adult;
@@ -47,6 +48,8 @@ public class SaveStudentOrder {
         husband.setPassportOffice(new PassportOffice(1L, "", ""));
         husband.setStudentId("" + (10000 + id));
         husband.setAddress(address);
+        husband.setUniversity(new University(1L, ""));
+        husband.setStudentId("HH12345");
 
         //Жена
         Adult wife = new Adult("Петрова", "Ирина", "Николаевна", LocalDate.of(1998, 2, 28));
@@ -56,6 +59,8 @@ public class SaveStudentOrder {
         wife.setPassportOffice(new PassportOffice(2L, "", ""));
         wife.setStudentId("" + (20000 + id));
         wife.setAddress(address);
+        wife.setUniversity(new University(2L, ""));
+        wife.setStudentId("WW12345");
 
         //Ребенок 1
         Child child_1 = new Child("Петрова", "Анна", "Викторовна", LocalDate.of(2018, 4, 7));
