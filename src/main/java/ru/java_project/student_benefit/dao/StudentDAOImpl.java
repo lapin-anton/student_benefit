@@ -57,7 +57,7 @@ public class StudentDAOImpl implements StudentOrderDAO {
                     "INNER JOIN jc_register_office ro ON ro.r_office_id = so.register_office_id " +
                     "INNER JOIN jc_passport_office h_po ON h_po.p_office_id = so.h_passport_office_id " +
                     "INNER JOIN jc_passport_office w_po ON w_po.p_office_id = so.w_passport_office_id" +
-                    " WHERE student_order_status = ? ORDER BY student_order_date";
+                    " WHERE student_order_status = ? ORDER BY student_order_date LIMIT ?";
 
     private static final String SELECT_CHILD =
             "SELECT soc.*, ro.r_office_area_id as r_office_area_id, ro.r_office_name as r_office_name " +
@@ -77,13 +77,14 @@ public class StudentDAOImpl implements StudentOrderDAO {
                     "INNER JOIN jc_passport_office w_po ON w_po.p_office_id = so.w_passport_office_id " +
                     "INNER JOIN jc_student_child soc ON soc.student_order_id = so.student_order_id " +
                     "INNER JOIN jc_register_office ro_c ON ro_c.r_office_id = soc.c_register_office_id " +
-                    " WHERE student_order_status = ? ORDER BY student_order_date";
+                    " WHERE student_order_status = ? ORDER BY so.student_order_id LIMIT ?";
 
     //TODO make one method
     private Connection getConnection() throws SQLException {
         Connection connection = DriverManager.getConnection(
                 Config.getProperty(Config.DB_URL),
-                Config.getProperty(Config.DB_LOGIN), Config.getProperty(Config.DB_PASSWORD));
+                Config.getProperty(Config.DB_LOGIN),
+                Config.getProperty(Config.DB_PASSWORD));
         return connection;
     }
 
@@ -190,14 +191,20 @@ public class StudentDAOImpl implements StudentOrderDAO {
             PreparedStatement stmt = connection.prepareStatement(SELECT_ORDERS_FULL)) {
             Map<Long, StudentOrder> map = new HashMap<>();
             stmt.setInt(1, StudentOrderStatus.START.ordinal());
+            int limit = Integer.parseInt(Config.getProperty(Config.DB_LIMIT));
+            stmt.setInt(2, limit);
             ResultSet rs = stmt.executeQuery();
-
+            int count = 0;
             while (rs.next()) {
                 Long soId = rs.getLong("student_order_id");
                 if(!map.containsKey(soId)) {
                     StudentOrder order = getFullStudentOrder(rs);
                     result.add(order);
                     map.put(soId, order);
+                    count++;
+                }
+                if(count >= limit) {
+                    result.remove(result.size() - 1);
                 }
                 StudentOrder so = map.get(soId);
                 Child ch = fillChild(rs);
@@ -215,8 +222,8 @@ public class StudentDAOImpl implements StudentOrderDAO {
         try(Connection connection = getConnection();
             PreparedStatement stmt = connection.prepareStatement(SELECT_ORDERS)) {
             stmt.setInt(1, StudentOrderStatus.START.ordinal());
+            stmt.setInt(2, Integer.parseInt(Config.getProperty(Config.DB_LIMIT)));
             ResultSet rs = stmt.executeQuery();
-
             while (rs.next()) {
                 StudentOrder order = getFullStudentOrder(rs);
                 result.add(order);
