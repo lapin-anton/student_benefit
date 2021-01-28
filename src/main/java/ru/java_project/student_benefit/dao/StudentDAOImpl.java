@@ -13,6 +13,8 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class StudentDAOImpl implements StudentOrderDAO {
 
@@ -47,9 +49,21 @@ public class StudentDAOImpl implements StudentOrderDAO {
                     " ?, ?)";
 
     private static final String SELECT_ORDERS =
-                    "SELECT so.*, ro.r_office_area_id, ro.r_office_name FROM jc_student_order so" +
-                    " INNER JOIN jc_register_office ro ON ro.r_office_id = so.register_office_id" +
-                    " WHERE student_order_status = 0 ORDER BY student_order_date";
+                    "SELECT so.*, ro.r_office_area_id, ro.r_office_name, " +
+                    "h_po.p_office_area_id as h_p_office_area_id, h_po.p_office_name as h_p_office_name, " +
+                    "w_po.p_office_area_id as w_p_office_area_id, w_po.p_office_name as w_p_office_name " +
+                    "FROM jc_student_order so " +
+                    "INNER JOIN jc_register_office ro ON ro.r_office_id = so.register_office_id " +
+                    "INNER JOIN jc_passport_office h_po ON h_po.p_office_id = so.h_passport_office_id " +
+                    "INNER JOIN jc_passport_office w_po ON w_po.p_office_id = so.w_passport_office_id" +
+                    " WHERE student_order_status = ? ORDER BY student_order_date";
+
+    private static final String SELECT_CHILD =
+            "SELECT soc.*, ro.r_office_area_id as r_office_area_id, ro.r_office_name as r_office_name " +
+            "FROM jc_student_child soc " +
+            "INNER JOIN jc_register_office ro " +
+            "ON ro.r_office_id = soc.c_register_office_id " +
+            "WHERE soc.student_order_id IN";
 
     //TODO make one method
     private Connection getConnection() throws SQLException {
@@ -154,8 +168,10 @@ public class StudentDAOImpl implements StudentOrderDAO {
     public List<StudentOrder> getStudentOrders() throws DaoException {
         List<StudentOrder> result = new ArrayList<>();
         try(Connection connection = getConnection();
-            Statement stmt = connection.createStatement()) {
-            ResultSet rs = stmt.executeQuery(SELECT_ORDERS);
+            PreparedStatement stmt = connection.prepareStatement(SELECT_ORDERS)) {
+            stmt.setInt(1, StudentOrderStatus.START.ordinal());
+            ResultSet rs = stmt.executeQuery();
+
             while (rs.next()) {
                 StudentOrder order = new StudentOrder();
                 fillStudentOrder(rs, order);
@@ -166,10 +182,45 @@ public class StudentDAOImpl implements StudentOrderDAO {
                 order.setWife(wife);
                 result.add(order);
             }
+            findChildren(connection, result);
             rs.close();
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+        return result;
+    }
+
+    private void findChildren(Connection connection, List<StudentOrder> result) throws SQLException {
+        String arg = "(" + result.stream().map(so -> String.valueOf(so.getStudentOrderId()))
+                .collect(Collectors.joining(",")) + ")";
+
+        Map<Long, StudentOrder> map = result.stream()
+                .collect(Collectors.toMap(so -> so.getStudentOrderId(), so -> so));
+
+        try(PreparedStatement stmt = connection.prepareStatement(SELECT_CHILD + arg)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Child ch = fillChild(rs);
+                StudentOrder so = map.get(rs.getLong("student_order_id"));
+                so.addChild(ch);
+            }
+        }
+    }
+
+    private Child fillChild(ResultSet rs) throws SQLException {
+        Child result = new Child();
+        result.setSurName(rs.getString("c_sur_name"));
+        result.setGivenName(rs.getString("c_given_name"));
+        result.setPatronymic(rs.getString("c_patronymic"));
+        result.setDateOfBirth(rs.getDate("c_date_of_birth").toLocalDate());
+        result.setAddress(fillAddress(rs, "c_"));
+        result.setCertificateNumber(rs.getString("c_certificate_number"));
+        result.setIssueDate(rs.getDate("c_certificate_date").toLocalDate());
+        Long roId = rs.getLong("c_register_office_id");
+        String roAreaId = rs.getString("r_office_area_id");
+        String roName = rs.getString("r_office_name");
+        RegisterOffice ro = new RegisterOffice(roId, roAreaId, roName);
+        result.setRegisterOffice(ro);
         return result;
     }
 
@@ -183,7 +234,9 @@ public class StudentDAOImpl implements StudentOrderDAO {
         adult.setPassportNumber(rs.getString(prefix + "passport_number"));
         adult.setIssueDate(rs.getDate(prefix + "passport_date").toLocalDate());
         Long poId = rs.getLong(prefix + "passport_office_id");
-        PassportOffice po = new PassportOffice(poId, "", "");
+        String poAreaId = rs.getString(prefix + "p_office_area_id");
+        String poName = rs.getString(prefix + "p_office_name");
+        PassportOffice po = new PassportOffice(poId, poAreaId, poName);
         adult.setPassportOffice(po);
         Address address = fillAddress(rs, prefix);
         adult.setAddress(address);
@@ -202,7 +255,7 @@ public class StudentDAOImpl implements StudentOrderDAO {
         address.setStreet(street);
         address.setBuilding(rs.getString(prefix + "building"));
         address.setExtension(rs.getString(prefix + "extension"));
-        address.setBuilding(rs.getString(prefix + "apartment"));
+        address.setApartment(rs.getString(prefix + "apartment"));
         return address;
     }
 

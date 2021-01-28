@@ -40,4 +40,13 @@ public class Child extends Person {
     public void setRegisterOffice(RegisterOffice registerOffice) {
         this.registerOffice = registerOffice;
     }
+
+    @Override
+    public String toString() {
+        return "Child{" +
+                "certificateNumber='" + certificateNumber + '\'' +
+                ", issueDate=" + issueDate +
+                ", registerOffice=" + registerOffice +
+                '}';
+    }
 }
