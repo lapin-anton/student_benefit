@@ -1,5 +1,6 @@
 package ru.java_project.student_benefit;
 
+import ru.java_project.student_benefit.dao.StudentDAOImpl;
 import ru.java_project.student_benefit.domain.*;
 import ru.java_project.student_benefit.domain.children.AnswerChildren;
 import ru.java_project.student_benefit.domain.marriage.AnswerMarriage;
@@ -36,9 +37,13 @@ public class StudentOrderValidator {
     }
 
     public void checkAll() {
-        List<StudentOrder> orders = readStudentOrders();
-        for (StudentOrder so: orders) {
-            checkOneOrder(so);
+        try {
+            List<StudentOrder> orders = readStudentOrders();
+            for (StudentOrder so : orders) {
+                checkOneOrder(so);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -54,12 +59,8 @@ public class StudentOrderValidator {
         mailSender.sendMail(order);
     }
 
-    private List<StudentOrder> readStudentOrders() {
-        List<StudentOrder> orders = new LinkedList<>();
-        for (int i = 0; i < 5; i++) {
-            orders.add(SaveStudentOrder.buildStudentOrder(i));
-        }
-        return orders;
+    private List<StudentOrder> readStudentOrders() throws Exception {
+        return new StudentDAOImpl().getStudentOrders();
     }
 
     public AnswerCityRegister checkCityRegister(StudentOrder studentOrder) {

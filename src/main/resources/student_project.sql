@@ -95,30 +95,30 @@ CREATE TABLE jc_student_order
 );
 
 CREATE TABLE jc_student_child (
-    student_child_id INT NOT NULL AUTO_INCREMENT,
-    student_order_id INT NOT NULL,
-    c_sur_name VARCHAR(100) NOT NULL,
-    c_given_name VARCHAR(100) NOT NULL,
-    c_patronymic VARCHAR(100) NOT NULL,
-    c_date_of_birth DATE NOT NULL,
-    c_certificate_number VARCHAR(10) NOT NULL,
-    c_certificate_date DATE NOT NULL,
-    c_register_office_id INTEGER NOT NULL,
-    c_post_index VARCHAR(10),
-    c_street_code INTEGER NOT NULL,
-    c_building VARCHAR(10) NOT NULL,
-    c_extension VARCHAR(10),
-    c_apartment VARCHAR(10),
-    PRIMARY KEY (student_child_id),
-    FOREIGN KEY (student_order_id)
-        REFERENCES jc_student_order (student_order_id)
-        ON DELETE RESTRICT,
-    FOREIGN KEY (c_street_code)
-        REFERENCES jc_street (street_code)
-        ON DELETE RESTRICT,
-    FOREIGN KEY (c_register_office_id)
-        REFERENCES jc_register_office (r_office_id)
-        ON DELETE RESTRICT
+      student_child_id INT NOT NULL AUTO_INCREMENT,
+      student_order_id INT NOT NULL,
+      c_sur_name VARCHAR(100) NOT NULL,
+      c_given_name VARCHAR(100) NOT NULL,
+      c_patronymic VARCHAR(100) NOT NULL,
+      c_date_of_birth DATE NOT NULL,
+      c_certificate_number VARCHAR(10) NOT NULL,
+      c_certificate_date DATE NOT NULL,
+      c_register_office_id INTEGER NOT NULL,
+      c_post_index VARCHAR(10),
+      c_street_code INTEGER NOT NULL,
+      c_building VARCHAR(10) NOT NULL,
+      c_extension VARCHAR(10),
+      c_apartment VARCHAR(10),
+      PRIMARY KEY (student_child_id),
+      FOREIGN KEY (student_order_id)
+          REFERENCES jc_student_order (student_order_id)
+          ON DELETE RESTRICT,
+      FOREIGN KEY (c_street_code)
+          REFERENCES jc_street (street_code)
+          ON DELETE RESTRICT,
+      FOREIGN KEY (c_register_office_id)
+          REFERENCES jc_register_office (r_office_id)
+          ON DELETE RESTRICT
 );
 
 CREATE INDEX idx_student_order_status ON jc_student_order(student_order_status);

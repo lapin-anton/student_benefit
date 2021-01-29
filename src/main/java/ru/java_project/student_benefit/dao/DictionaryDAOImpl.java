@@ -14,17 +14,13 @@ import java.util.List;
 public class DictionaryDAOImpl implements DictionaryDAO {
 
     private static final String GET_STREET = "SELECT * FROM jc_street WHERE UPPER(street_name) LIKE UPPER(?)";
-    private static final String GET_PASSPORT_OFFICE = "SELECT * FROM jc_passport_office WHERE office_area_id=?";
-    private static final String GET_REGISTER_OFFICE = "SELECT * FROM jc_register_office WHERE r_area_id=?";
+    private static final String GET_PASSPORT_OFFICE = "SELECT * FROM jc_passport_office WHERE p_office_area_id=?";
+    private static final String GET_REGISTER_OFFICE = "SELECT * FROM jc_register_office WHERE r_office_area_id=?";
     private static final String GET_AREA = "SELECT * FROM jc_country_struct WHERE area_id like ? " +
             "and area_id <> ?";
 
-    //TODO make one method
     private Connection getConnection() throws SQLException {
-        Connection connection = DriverManager.getConnection(
-                Config.getProperty(Config.DB_URL),
-                Config.getProperty(Config.DB_LOGIN), Config.getProperty(Config.DB_PASSWORD));
-        return connection;
+        return ConnectionBuilder.getConnection();
     }
 
     public List<Street> findStreets(String input) throws DaoException {
@@ -52,8 +48,8 @@ public class DictionaryDAOImpl implements DictionaryDAO {
             stmt.setString(1, areaId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                result.add(new PassportOffice(rs.getLong("office_id"),
-                        rs.getString("office_area_id"), rs.getString("office_name")));
+                result.add(new PassportOffice(rs.getLong("p_office_id"),
+                        rs.getString("p_office_area_id"), rs.getString("p_office_name")));
             }
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -71,7 +67,7 @@ public class DictionaryDAOImpl implements DictionaryDAO {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 result.add(new RegisterOffice(rs.getLong("r_office_id"),
-                        rs.getString("r_area_id"), rs.getString("r_office_name")));
+                        rs.getString("r_office_area_id"), rs.getString("r_office_name")));
             }
         } catch (SQLException e) {
             throw new DaoException(e);
