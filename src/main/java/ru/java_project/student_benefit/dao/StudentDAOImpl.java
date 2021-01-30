@@ -1,5 +1,7 @@
 package ru.java_project.student_benefit.dao;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.java_project.student_benefit.config.Config;
 import ru.java_project.student_benefit.domain.*;
 import ru.java_project.student_benefit.domain.address.Address;
@@ -18,6 +20,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class StudentDAOImpl implements StudentOrderDAO {
+
+    private final static Logger logger = LoggerFactory.getLogger(StudentDAOImpl.class);
 
     private static final String INSERT_ORDER =
             "INSERT INTO jc_student_order(" +
@@ -86,7 +90,7 @@ public class StudentDAOImpl implements StudentOrderDAO {
     @Override
     public Long saveStudentOrder(StudentOrder so) throws DaoException {
         Long result = -1L;
-
+        logger.info("SO:{}", so);
         try (Connection con = getConnection();
              PreparedStatement stmt = con.prepareStatement(INSERT_ORDER, new String[]{"student_order_id"})) {
 
@@ -122,6 +126,7 @@ public class StudentDAOImpl implements StudentOrderDAO {
             }
 
         } catch (SQLException ex) {
+            logger.error(ex.getMessage(), ex);
             throw new DaoException(ex);
         }
 
@@ -207,6 +212,7 @@ public class StudentDAOImpl implements StudentOrderDAO {
             }
             rs.close();
         } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
             throw new DaoException(e);
         }
         return result;
@@ -226,6 +232,7 @@ public class StudentDAOImpl implements StudentOrderDAO {
             findChildren(connection, result);
             rs.close();
         } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
             throw new DaoException(e);
         }
         return result;

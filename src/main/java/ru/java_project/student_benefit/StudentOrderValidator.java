@@ -1,7 +1,7 @@
 package ru.java_project.student_benefit;
 
 import ru.java_project.student_benefit.dao.StudentDAOImpl;
-import ru.java_project.student_benefit.domain.*;
+import ru.java_project.student_benefit.domain.StudentOrder;
 import ru.java_project.student_benefit.domain.children.AnswerChildren;
 import ru.java_project.student_benefit.domain.marriage.AnswerMarriage;
 import ru.java_project.student_benefit.domain.register.AnswerCityRegister;
@@ -12,7 +12,6 @@ import ru.java_project.student_benefit.validator.CityRegisterValidator;
 import ru.java_project.student_benefit.validator.MarriageValidator;
 import ru.java_project.student_benefit.validator.StudentValidator;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class StudentOrderValidator {

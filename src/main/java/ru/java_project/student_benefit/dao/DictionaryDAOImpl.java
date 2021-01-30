@@ -1,17 +1,23 @@
 package ru.java_project.student_benefit.dao;
 
-import ru.java_project.student_benefit.config.Config;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.java_project.student_benefit.domain.CountryArea;
 import ru.java_project.student_benefit.domain.PassportOffice;
 import ru.java_project.student_benefit.domain.RegisterOffice;
 import ru.java_project.student_benefit.domain.address.Street;
 import ru.java_project.student_benefit.exception.DaoException;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DictionaryDAOImpl implements DictionaryDAO {
+
+    private final static Logger logger = LoggerFactory.getLogger(DictionaryDAOImpl.class);
 
     private static final String GET_STREET = "SELECT * FROM jc_street WHERE UPPER(street_name) LIKE UPPER(?)";
     private static final String GET_PASSPORT_OFFICE = "SELECT * FROM jc_passport_office WHERE p_office_area_id=?";
@@ -34,6 +40,7 @@ public class DictionaryDAOImpl implements DictionaryDAO {
                 result.add(new Street(rs.getLong(1), rs.getString(2)));
             }
         } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
             throw new DaoException(e);
         }
         return result;
@@ -52,6 +59,7 @@ public class DictionaryDAOImpl implements DictionaryDAO {
                         rs.getString("p_office_area_id"), rs.getString("p_office_name")));
             }
         } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
             throw new DaoException(e);
         }
         return result;
@@ -70,6 +78,7 @@ public class DictionaryDAOImpl implements DictionaryDAO {
                         rs.getString("r_office_area_id"), rs.getString("r_office_name")));
             }
         } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
             throw new DaoException(e);
         }
         return result;
@@ -90,6 +99,7 @@ public class DictionaryDAOImpl implements DictionaryDAO {
                         rs.getString("area_name")));
             }
         } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
             throw new DaoException(e);
         }
         return result;

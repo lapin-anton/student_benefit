@@ -47,6 +47,6 @@ public class Child extends Person {
                 "certificateNumber='" + certificateNumber + '\'' +
                 ", issueDate=" + issueDate +
                 ", registerOffice=" + registerOffice +
-                '}';
+                '}' + super.toString();
     }
 }

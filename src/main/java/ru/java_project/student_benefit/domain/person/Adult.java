@@ -79,6 +79,6 @@ public class Adult extends Person {
                 ", passportOffice=" + passportOffice +
                 ", university=" + university +
                 ", studentId='" + studentId + '\'' +
-                '}';
+                '}' + super.toString();
     }
 }
