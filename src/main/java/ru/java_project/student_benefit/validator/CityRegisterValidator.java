@@ -7,7 +7,6 @@ import ru.java_project.student_benefit.domain.register.AnswerCityRegisterItem;
 import ru.java_project.student_benefit.domain.register.CityRegisterResponse;
 import ru.java_project.student_benefit.domain.StudentOrder;
 import ru.java_project.student_benefit.exception.CityRegisterException;
-import ru.java_project.student_benefit.exception.TransportException;
 
 public class CityRegisterValidator {
 
@@ -39,17 +38,11 @@ public class CityRegisterValidator {
         AnswerCityRegisterItem.CityError error = null;
         try {
             CityRegisterResponse tmp = personChecker.checkPerson(person);
-            status = (tmp.isRegistered()) ? AnswerCityRegisterItem.CityStatus.YES: AnswerCityRegisterItem.CityStatus.NO;
-
-        } catch (CityRegisterException | TransportException e) {
+            status = (tmp.isRegistered()) ? AnswerCityRegisterItem.CityStatus.YES:
+                    AnswerCityRegisterItem.CityStatus.NO;
+        } catch (CityRegisterException e) {
             status = AnswerCityRegisterItem.CityStatus.ERROR;
-            if (e instanceof CityRegisterException) {
-                CityRegisterException t = (CityRegisterException) e;
-                error = new AnswerCityRegisterItem.CityError(t.getCode(), t.getMessage());
-            } else {
-                TransportException t = (TransportException) e;
-                error = new AnswerCityRegisterItem.CityError(IN_CODE, "transport error");
-             }
+            error = new AnswerCityRegisterItem.CityError(e.getCode(), e.getMessage());
         }
         item = new AnswerCityRegisterItem(status, person, error);
         return item;
