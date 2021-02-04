@@ -20,7 +20,7 @@ public class CityRegisterValidator {
     private CityRegisterChecker personChecker;
 
     public CityRegisterValidator() {
-        personChecker = new FakeCityRegisterChecker();
+        personChecker = new RealCityRegisterChecker();
     }
 
     public AnswerCityRegister checkCityRegister(StudentOrder studentOrder) {
@@ -39,7 +39,7 @@ public class CityRegisterValidator {
         AnswerCityRegisterItem.CityError error = null;
         try {
             CityRegisterResponse tmp = personChecker.checkPerson(person);
-            status = (tmp.isExisting()) ? AnswerCityRegisterItem.CityStatus.YES: AnswerCityRegisterItem.CityStatus.NO;
+            status = (tmp.isRegistered()) ? AnswerCityRegisterItem.CityStatus.YES: AnswerCityRegisterItem.CityStatus.NO;
 
         } catch (CityRegisterException | TransportException e) {
             status = AnswerCityRegisterItem.CityStatus.ERROR;
